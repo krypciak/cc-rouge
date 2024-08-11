@@ -17,8 +17,8 @@ export class DungeonBuilder {
     async build(
         id: string,
         seed: string,
-        // configFactory: DungeonConfigFactory = new DungeonConfigSimpleFactory()
-        configFactory: DungeonConfigFactory = new DungeonConfigMainFactory()
+        configFactory: DungeonConfigFactory = new DungeonConfigSimpleFactory()
+        // configFactory: DungeonConfigFactory = new DungeonConfigMainFactory()
     ) {
         if (seed === '') {
             Math.seedrandomSeed(Math.random().toString())

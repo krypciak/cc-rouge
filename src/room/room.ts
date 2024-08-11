@@ -218,9 +218,7 @@ export class Room extends MapRect {
         arr.push(this)
         this.ios.forEach(io => {
             // @ts-expect-error cant import RoomIOTunnel because of a circular dependency so im doing this
-            if (io.tunnel) {
-                arr.push(io.tunnel)
-            }
+            if (io.tunnel) arr.push(io.tunnel)
         })
     }
 

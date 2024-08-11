@@ -479,7 +479,7 @@ export class MapBallChanger implements MapEntity {
             mapId: mapId++,
             changerType: {
                 type: "CHANGE_DIR",
-                options: { dir: DirUtil.convertToStringFace8(dir) },
+                settings: { dir: DirUtil.convertToStringFace8(dir) },
             },
         })
     }
@@ -489,8 +489,8 @@ export class MapBallChanger implements MapEntity {
             name,
             mapId: mapId++,
             changerType: {
-                type: "CHANGE_SPEED"
-                options: { factor },
+                type: "CHANGE_SPEED",
+                settings: { factor },
             },
         })
     }

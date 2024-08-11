@@ -5,6 +5,7 @@ import { poststartGameStart, prestartGameStart, startDnggenGame } from '@root/ga
 import { DungeonPaths } from '@root/dungeon/dungeon-paths'
 import { Mod1 } from 'cc-blitzkrieg/src/types'
 import { godlikeStats } from './util/misc'
+import './util/modify-prototypes'
 
 declare global {
     const dnggen: DngGen

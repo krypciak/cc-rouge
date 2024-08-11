@@ -9,6 +9,7 @@ interface DungeonSaveConfig {
     areaDbEntries: Record<string, sc.MapModel.Area>
     sels: Record<keyof typeof blitzkrieg.sels, string>
 }
+const fs: typeof import('fs') = (0, eval)("require('fs')")
 
 export class DungeonPaths {
     static baseName: string = 'dnggen'
@@ -82,13 +83,26 @@ export class DungeonPaths {
     }
 
     clearDir() {
-        blitzkrieg.FsUtil.mkdirsClear(this.baseDir)
+        const path = this.baseDir
+        clear(path)
+        function clear(path: string) {
+            fs.readdirSync(path).forEach((file: string) => {
+                const filePath = `${path}/${file}`
+
+                if (fs.lstatSync(filePath).isDirectory()) {
+                    clear(filePath)
+                    fs.rmdirSync(filePath)
+                } else {
+                    fs.unlinkSync(filePath)
+                }
+            })
+        }
     }
 
     saveMap(builder: MapBuilder): Promise<void> {
         assert(builder.rpv)
         console.log('map: ', ig.copy(builder.rpv.map))
-        blitzkrieg.FsUtil.mkdirs(`${this.mapsDir}/${builder.pathParent}`)
+        fs.mkdirSync(`${this.mapsDir}/${builder.pathParent}`, { recursive: true })
         const path = `${this.mapsDir}/${builder.path}.json`
         const gamePath = `${this.mapsDirGame}/${builder.path}.json`
 
@@ -100,22 +114,22 @@ export class DungeonPaths {
         assert(builder.builtArea, 'called saveToFile() before finalizing build')
         assert(builder.dbEntry, 'area db entry not generated')
 
-        blitzkrieg.FsUtil.mkdirs(this.areaDir)
+        fs.mkdirSync(this.areaDir, { recursive: true })
         const path = this.areaFile
         this.config.paths[this.areaFileGame] = path
         this.config.areaDbEntries[builder.areaInfo.name] = builder.dbEntry
-        blitzkrieg.FsUtil.writeFileSync(path, builder.builtArea)
+        fs.writeFileSync(path, JSON.stringify(builder.builtArea))
     }
 
     saveConfig() {
-        blitzkrieg.FsUtil.writeFileSync(this.configFile, this.config)
+        fs.writeFileSync(this.configFile, JSON.stringify(this.config))
     }
 
     loadConfig(): boolean {
         if (!blitzkrieg.FsUtil.doesFileExist(this.configFile)) {
             return false
         }
-        this.config = JSON.parse(blitzkrieg.FsUtil.readFileSync(this.configFile))
+        this.config = JSON.parse(fs.readFileSync(this.configFile, 'utf8'))
 
         return true
     }
@@ -142,7 +156,7 @@ export class DungeonPaths {
     registerSelections(load: boolean = false) {
         for (const selEntry of Object.entries(this.config.sels)) {
             const [poolName, path] = selEntry as [keyof typeof blitzkrieg.sels, string]
-            const pool: SelectionManager = blitzkrieg.sels[poolName] as SelectionManager
+            const pool = blitzkrieg.sels[poolName] as SelectionManager<any>
             while (pool.jsonFiles.includes(path)) {
                 const indexToDel: number = pool.jsonFiles.indexOf(path)
                 Object.keys(pool.selMap).forEach(k => {
@@ -166,7 +180,7 @@ export class DungeonPaths {
         if (index === undefined) {
             throw new Error('pool name doesnt exist: ' + poolName)
         }
-        const pool: SelectionManager = blitzkrieg.sels[poolName] as SelectionManager
+        const pool = blitzkrieg.sels[poolName] as SelectionManager<any>
         pool.setMapEntry(sel.mapName, new blitzkrieg.SelectionMapEntry([sel], index))
     }
 }

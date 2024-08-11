@@ -16,7 +16,7 @@ import { MapBuilder, RoomPlaceVars } from '@root/room/map-builder'
 import { ArmEnd, ArmRuntime } from '@root/dungeon/dungeon-arm'
 import { ItemHandler } from './item-handler'
 import { setToClosestSelSide } from '@root/util/misc'
-import type { PuzzleSelection, PuzzleRoomType, PuzzleCompletionType } from 'cc-blitzkrieg/src/puzzle-selection'
+import { PuzzleSelection, PuzzleRoomType, PuzzleCompletionType } from 'cc-blitzkrieg/src/puzzle-selection'
 import { EntityRect, MapRect, Rect, generateUniqueId } from 'cc-map-util/src/rect'
 
 interface PuzzleData {
@@ -55,7 +55,7 @@ export class PuzzleRoom extends Room {
                 /* entry is from blitzkrieg puzzle list */
                 if (entry.fileIndex == 0 && entry.sels.length > 0) {
                     const filtered: Readonly<PuzzleSelection>[] = entry.sels
-                        .filter(sel => sel.data.type != 'dis')
+                        .filter(sel => sel.data.type != PuzzleRoomType.Dis)
                         .map(e => Object.freeze(e as PuzzleSelection))
                     puzzleMap.set(mapName, filtered)
                     for (const sel of filtered) {
@@ -121,7 +121,9 @@ export class PuzzleRoom extends Room {
             let solveConditionUnique: string | undefined
             switch (puzzle.completion) {
                 case blitzkrieg.PuzzleCompletionType.Normal:
-                    solveCondition = blitzkrieg.PuzzleSelectionManager.getPuzzleSolveCondition(puzzle.sel)
+                    const res = blitzkrieg.PuzzleSelectionManager.getPuzzleSolveCondition(puzzle.sel)
+                    if (!res) throw new Error('no puzzle solution found!')
+                    solveCondition = res[0]
                     break
                 case blitzkrieg.PuzzleCompletionType.GetTo:
                     if (puzzle.roomType == blitzkrieg.PuzzleRoomType.WholeRoom) {

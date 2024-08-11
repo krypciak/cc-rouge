@@ -11,16 +11,18 @@
     "author": "krypek",
     "license": "GPLv3",
     "devDependencies": {
-        "@types/jquery": "^3.5.29",
-        "@types/node": "^20.4.4",
-        "@typescript-eslint/eslint-plugin": "^6.2.0",
-        "@typescript-eslint/parser": "^6.2.0",
+        "@types/jquery": "^3.5.30",
+        "@types/node": "^11.15.54",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "@typescript-eslint/parser": "^6.21.0",
+        "array-flat-polyfill": "^1.0.1",
         "cc-blitzkrieg": "github:krypciak/cc-blitzkrieg",
         "cc-map-util": "github:krypciak/cc-map-util",
         "cc-vim": "github:krypciak/cc-vim",
-        "esbuild": "^0.18.15",
+        "ccmodmanager": "github:CCDirectLink/CCModManager",
+        "esbuild": "^0.18.20",
         "nax-ccuilib": "github:conorlawton/nax-ccuilib",
-        "typescript": "^5.2.2",
+        "typescript": "^5.5.4",
         "ultimate-crosscode-typedefs": "github:krypciak/ultimate-crosscode-typedefs"
     }
 }

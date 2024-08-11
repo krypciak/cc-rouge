@@ -15,7 +15,7 @@ export class DungeonConfigSimpleFactory implements DungeonConfigFactory {
         this.seed = seed
         this.bPool = []
 
-        const dngGenConfig: DungeonGenerateConfig = this.armverycomplex()
+        const dngGenConfig: DungeonGenerateConfig = this.armsimple() // this.armverycomplex()
         return dngGenConfig
     }
 
